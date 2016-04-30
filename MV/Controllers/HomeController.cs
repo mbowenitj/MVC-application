@@ -9,9 +9,10 @@ namespace MV.Controllers
     public class HomeController : Controller
     {
         // GET: Home
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View();
+            return View(
+                );
         }
     }
 }

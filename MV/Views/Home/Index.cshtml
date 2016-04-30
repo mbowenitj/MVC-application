@@ -25,7 +25,13 @@
     </style>
 </head>
 <body>
-    <h2>AngularJS Application</h2>
+
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        <b>Search by:</b>@Html.RadioButton("searchBy", "Job Number")<text> Job Number</text>
+        @Html.RadioButton("searchBy", "Job Name")<text>Job Name</text><br />
+        @Html.TextBox("Search");<input type="submit" value="Search" />
+    }
     <div ng-app="" ng-controller="jobController">
         <table>
             <tr>
