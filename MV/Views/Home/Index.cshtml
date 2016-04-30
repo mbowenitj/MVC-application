@@ -3,7 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Flint and Tinder MVC App</h2>
+<h2></h2>
 
 <html>
 <head>
@@ -28,7 +28,7 @@
 
      <div ng-app="" ng-controller="JobCtlr">
     <div class="input-group">
-        <input class="form-control" ng-model="search" placeholder="Search" type="search" ng-change="search()" />
+        <input class="form-control" ng-model="search" placeholder="Search" type="search" ng-change="search()" /><br/><br/>
         </div>
            
                 <table  class="table  table-hover data-table myTable">
@@ -40,9 +40,9 @@
                         <th>Status</th>
 
                     </tr>
-                   <tr ng-repeat="job in jobs|filter:search |limitTo:10">
+                  
+                    <tr ng-repeat="job in jobs|filter:search |limitTo:pageSize">
 
-                                             
                         <td>{{ job.client }}</td>
                         <td>{{ job.job_number }}</td>
                         <td>{{ job.job_name }}</td>
@@ -55,72 +55,32 @@
              Previous
          </button>
          {{currentPage+1}}/{{numberOfPages()}}
-         <button ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">
+         <button ng-disabled="currentPage >= jobs.length/pageSize - 1" ng-click="currentPage=currentPage+1">
              Next
          </button>
             </div>
 
             <script>
+                var app=angular.module('myApp',[]);
+
                 function JobCtlr($scope, $http) {
                     var url = "http://localhost:51640/job.txt";
+                    $scope.currentPage = 0;
+                    $scope.jobs = {};
+                    $scope.pageSize = 10;
                     $http.get(url).success(function (response) {
                         $scope.jobs = response;
+                       
+
                     });
+                    $scope.numberOfPages = function () {
+                        return Math.ceil($scope.jobs.length / $scope.pageSize);
+                    }
                 }
 
+                         
 
-                var app = angular.module('myApp', []);
-
-                // alternate - https://github.com/michaelbromley/angularUtils/tree/master/src/directives/pagination
-                // alternate - http://fdietz.github.io/recipes-with-angular-js/common-user-interface-patterns/paginating-through-client-side-data.html
-
-                app.controller('JobCtlr', ['$scope', '$filter', function ($scope, $filter) {
-                    $scope.currentPage = 0;
-                    $scope.pageSize = 10;
-                    $scope.data = [];
-                    $scope.q = '';
-
-                    $scope.getData = function () {
-                        // needed for the pagination calc
-                        // https://docs.angularjs.org/api/ng/filter/filter
-                        return $filter('filter')($scope.data, $scope.q)
-                        /* 
-                          // manual filter
-                          // if u used this, remove the filter from html, remove above line and replace data with getData()
-                          
-                           var arr = [];
-                           if($scope.q == '') {
-                               arr = $scope.data;
-                           } else {
-                               for(var ea in $scope.data) {
-                                   if($scope.data[ea].indexOf($scope.q) > -1) {
-                                       arr.push( $scope.data[ea] );
-                                   }
-                               }
-                           }
-                           return arr;
-                          */
-                    }
-
-                    $scope.numberOfPages = function () {
-                        return Math.ceil($scope.getData().length / $scope.pageSize);
-                    }
-
-                    for (var i = 0; i < 65; i++) {
-                        $scope.data.push("Item " + i);
-                    }
-                }]);
-
-                //We already have a limitTo filter built-in to angular,
-                //let's make a startFrom filter
-                app.filter('startFrom', function () {
-                    return function (input, start) {
-                        start = +start; //parse to int
-                        return input.slice(start);
-                    }
-                });
-
-
+               
               </script>
 
             <script src="http://localhost:51640/angular.min.js"></script>
