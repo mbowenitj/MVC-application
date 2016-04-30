@@ -25,7 +25,7 @@
 		"status": "closed"
 	}, {
 		"client": "Dolor Institute",
-		"jobn_umber": 5,
+		"job_number": 5,
 		"job_name": "Luxemburg",
 		"due": "2014-05-31 05:00:45",
 		"status": "closed"
@@ -43,7 +43,7 @@
 		"status": "closed"
 	}, {
 		"client": "Vulputate Associates",
-		"jobn_umber": 8,
+		"job_number": 8,
 		"job_name": "Istanbul",
 		"due": "2016-01-05 21:58:28",
 		"status": "closed"
@@ -55,7 +55,7 @@
 		"status": "open"
 	}, {
 		"client": "Lectus Sit Associates",
-		"jobn_umber": 10,
+		"job_number": 10,
 		"job_name": "CA",
 		"due": "2015-05-29 04:01:22",
 		"status": "open"
@@ -98,7 +98,7 @@
 	}, {
 		"client": "Interdum Limited",
 		"job_number": 17,
-		"job-name": "VIC",
+		"job_name": "VIC",
 		"due": "2015-06-10 07:16:53",
 		"status": "open"
 	}, {
