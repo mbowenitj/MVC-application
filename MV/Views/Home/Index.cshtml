@@ -26,40 +26,108 @@
 </head>
 <body>
 
-    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
-    {
-        <b>Search by:</b>@Html.RadioButton("searchBy", "Job Number")<text> Job Number</text>
-        @Html.RadioButton("searchBy", "Job Name")<text>Job Name</text><br />
-        @Html.TextBox("Search");<input type="submit" value="Search" />
-    }
-    <div ng-app="" ng-controller="jobController">
-        <table>
-            <tr>
-                <th>Client</th>
-                <th>Job Number</th>
-                <th>Job Name</th>
-                <th>Due</th>
-                <th>Status</th>
-                
-            </tr>
-            <tr ng-repeat="job in jobs">
-                <td>{{ job.client }}</td>
-                <td>{{ job.job_number }}</td>
-                <td>{{ job.job_name }}</td>
-                <td>{{ job.due }}</td>
-                <td>{{ job.status }}</td>
-            </tr>
-        </table>
-    </div>
+     <div ng-app="" ng-controller="JobCtlr">
+    <div class="input-group">
+        <input class="form-control" ng-model="search" placeholder="Search" type="search" ng-change="search()" />
+        </div>
+           
+                <table  class="table  table-hover data-table myTable">
+                    <tr>
+                        <th>Client</th>
+                        <th>Job Number</th>
+                        <th>Job Name</th>
+                        <th>Due</th>
+                        <th>Status</th>
+
+                    </tr>
+                   <tr ng-repeat="job in jobs|filter:search |limitTo:10">
+
+                                             
+                        <td>{{ job.client }}</td>
+                        <td>{{ job.job_number }}</td>
+                        <td>{{ job.job_name }}</td>
+                        <td>{{ job.due }}</td>
+                        <td>{{ job.status }}</td>
+                    </tr>
+                </table>
+
+         <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+             Previous
+         </button>
+         {{currentPage+1}}/{{numberOfPages()}}
+         <button ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">
+             Next
+         </button>
+            </div>
+
+            <script>
+                function JobCtlr($scope, $http) {
+                    var url = "http://localhost:51640/job.txt";
+                    $http.get(url).success(function (response) {
+                        $scope.jobs = response;
+                    });
+                }
+
+
+                var app = angular.module('myApp', []);
+
+                // alternate - https://github.com/michaelbromley/angularUtils/tree/master/src/directives/pagination
+                // alternate - http://fdietz.github.io/recipes-with-angular-js/common-user-interface-patterns/paginating-through-client-side-data.html
+
+                app.controller('JobCtlr', ['$scope', '$filter', function ($scope, $filter) {
+                    $scope.currentPage = 0;
+                    $scope.pageSize = 10;
+                    $scope.data = [];
+                    $scope.q = '';
+
+                    $scope.getData = function () {
+                        // needed for the pagination calc
+                        // https://docs.angularjs.org/api/ng/filter/filter
+                        return $filter('filter')($scope.data, $scope.q)
+                        /* 
+                          // manual filter
+                          // if u used this, remove the filter from html, remove above line and replace data with getData()
+                          
+                           var arr = [];
+                           if($scope.q == '') {
+                               arr = $scope.data;
+                           } else {
+                               for(var ea in $scope.data) {
+                                   if($scope.data[ea].indexOf($scope.q) > -1) {
+                                       arr.push( $scope.data[ea] );
+                                   }
+                               }
+                           }
+                           return arr;
+                          */
+                    }
+
+                    $scope.numberOfPages = function () {
+                        return Math.ceil($scope.getData().length / $scope.pageSize);
+                    }
+
+                    for (var i = 0; i < 65; i++) {
+                        $scope.data.push("Item " + i);
+                    }
+                }]);
+
+                //We already have a limitTo filter built-in to angular,
+                //let's make a startFrom filter
+                app.filter('startFrom', function () {
+                    return function (input, start) {
+                        start = +start; //parse to int
+                        return input.slice(start);
+                    }
+                });
+
+
+              </script>
+
+            <script src="http://localhost:51640/angular.min.js"></script>
+
     <script>
-        function jobController($scope, $http) {
-            var url = "http://localhost:51640/job.txt";
-            $http.get(url).success(function (response) {
-                $scope.jobs = response;
-            });
-        }
+
+
     </script>
-    
-    <script src="http://localhost:51640/angular.min.js"></script>
 </body>
 </html>

@@ -11,8 +11,7 @@ namespace MV.Controllers
         // GET: Home
         public ActionResult Index(int? page)
         {
-            return View(
-                );
+            return View();
         }
     }
 }
